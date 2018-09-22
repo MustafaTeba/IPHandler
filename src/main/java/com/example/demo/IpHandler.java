@@ -30,12 +30,12 @@ public class IpHandler {
                 remoteAddr = request.getRemoteAddr();
             }
         }
-        return remoteAddr;
+        return remoteAddr + ":3389 >>" + new Date().toString();
 	}
 
 	@GetMapping
 	String getIP() {
-		return remoteAddr + " >> " + new Date().toString();
+		return remoteAddr ;
 	}
 
 }
