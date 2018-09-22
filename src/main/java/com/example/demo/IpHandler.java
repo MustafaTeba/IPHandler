@@ -2,6 +2,9 @@ package com.example.demo;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,17 +13,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class IpHandler {
 
-	static IP address;
+	static String remoteAddr;
+	
+	private HttpServletRequest request;
 
+	 @Autowired
+	public void setRequest(HttpServletRequest request) {
+		this.request = request;
+	}
+	 
 	@PostMapping("/ip")
-	IP setIP(@RequestBody IP ip) {
-		this.address = ip;
-		return ip;
+	String setRemotePC_IP() {
+        if (request != null) {
+            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+            if (remoteAddr == null || "".equals(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+        return remoteAddr;
 	}
 
 	@GetMapping
 	String getIP() {
-		return address.getIp() + " >> " + new Date().toString();
+		return remoteAddr + " >> " + new Date().toString();
 	}
 
 }
